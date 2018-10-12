@@ -14,10 +14,14 @@ namespace IntegrationTests.Features.UsersController
         [Test]
         public async Task CreateUserReturns200WithUserModel()
         {
+            // Arrange
             var requestUser = TestHelpers.CreateUserWithRandomData();
             var request = TestHelpers.CreatePostRequest("api/users", requestUser);
+            
+            // ACT
             var (response, responseObject) = await SendRequest<User>(request);
 
+            // ASSERT
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(requestUser.Username, responseObject.Username);
             Assert.AreEqual(requestUser.Password, responseObject.Password);
