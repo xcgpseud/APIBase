@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Domain.Models;
@@ -21,6 +23,20 @@ namespace IntegrationTests
             {
                 Content = stringBody
             };
+        }
+
+        #endregion
+
+        #region Responses
+
+        public static (List<string>, List<string>) GetAllKeysAndValues(
+            Dictionary<string, List<string>> errors)
+        {
+            // Can contain duplicates
+            var keys = errors.Keys.ToList();
+            var values = errors.Values.SelectMany(x => x).ToList();
+
+            return (keys, values);
         }
 
         #endregion

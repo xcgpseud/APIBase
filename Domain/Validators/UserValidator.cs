@@ -1,4 +1,5 @@
 ﻿using System.Net.Mail;
+using Domain.Constants;
 using Domain.Models;
 using FluentValidation;
 
@@ -10,16 +11,16 @@ namespace Domain.Validators
         {
             RuleFor(x => x.Username)
                 .NotEmpty()
-                .WithMessage("You must specify a Username");
+                .WithMessage(UserConstants.MissingUsername);
             RuleFor(x => x.Password)
                 .NotEmpty()
-                .WithMessage("You must specify a Password");
+                .WithMessage(UserConstants.MissingPassword);
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage("You must specify an Email Address");
+                .WithMessage(UserConstants.MissingEmail);
             RuleFor(x => x.Email)
                 .Must(BeAValidEmail)
-                .WithMessage("You provided an invalid Email Address");
+                .WithMessage(UserConstants.InvalidEmail);
         }
 
         private bool BeAValidEmail(string email)

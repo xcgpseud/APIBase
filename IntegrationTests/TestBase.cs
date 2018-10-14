@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Domain.Models.Interfaces;
+using Logic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -37,13 +39,14 @@ namespace IntegrationTests
 
         #region Requests
 
-        protected async Task<(HttpResponseMessage, T)> SendRequest<T>(HttpRequestMessage request)
+        protected async Task<(HttpResponseMessage, Response<TModel>)> SendRequest<TModel>(HttpRequestMessage request)
+            where TModel : IModel, new()
         {
             var response = await Client.SendAsync(request);
             var result = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonConvert.DeserializeObject<T>(result);
+            var responseBody = JsonConvert.DeserializeObject<Response<TModel>>(result);
 
-            return (response, responseObject);
+            return (response, responseBody);
         }
 
         #endregion

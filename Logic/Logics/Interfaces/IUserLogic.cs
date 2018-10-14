@@ -1,8 +1,8 @@
-﻿using Database.Entities;
+﻿using Domain.Models;
 
 namespace Logic.Logics.Interfaces
 {
-    public interface IUserLogic : ILogic<UserEntity>
+    public interface IUserLogic : ILogic<User>
     {
     }
 }

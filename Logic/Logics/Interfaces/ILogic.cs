@@ -1,14 +1,15 @@
 ﻿using Database.Entities.Interfaces;
+using Domain.Models.Interfaces;
 
 namespace Logic.Logics.Interfaces
 {
-    public interface ILogic<TEntity> where TEntity : IEntity, new()
+    public interface ILogic<TModel> where TModel : IModel, new()
     {
-        TEntity Create(TEntity entity);
+        Response<TModel> Create(TModel model);
 
-        TEntity Get(long id);
+        Response<TModel> Get(long id);
 
-        TEntity Update(TEntity newEntity);
+        Response<TModel> Update(TModel model);
 
         void Delete(long id);
     }

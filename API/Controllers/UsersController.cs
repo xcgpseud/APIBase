@@ -20,28 +20,26 @@ namespace APIBase.Controllers
         [HttpPost]
         public IActionResult CreateUser([FromBody] User user)
         {
-            var entity = Mapper.Map<User, UserEntity>(user);
-            var result = _logic.Create(entity);
-            return new OkObjectResult(Mapper.Map<UserEntity, User>(result));
+            var result = _logic.Create(user);
+            return new OkObjectResult(result);
         }
 
         [HttpGet("{userId}", Name = "GetUser")]
         public IActionResult GetUser(long userId)
         {
             var result = _logic.Get(userId);
-            if (result == null)
+            if (result.ResponseObject == null)
             {
                 return new NotFoundResult();
             }
-            return new OkObjectResult(Mapper.Map<UserEntity, User>(result));
+            return new OkObjectResult(result);
         }
 
         [HttpPut]
         public IActionResult UpdateUser([FromBody] User user)
         {
-            var entity = Mapper.Map<User, UserEntity>(user);
-            var result = _logic.Update(entity);
-            return new OkObjectResult(Mapper.Map<UserEntity, User>(result));
+            var result = _logic.Update(user);
+            return new OkObjectResult(result);
         }
 
         [HttpDelete("{userId}")]

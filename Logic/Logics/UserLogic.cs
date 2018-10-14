@@ -16,19 +16,32 @@ namespace Logic.Logics
             _repository = repository;
         }
         
-        public UserEntity Create(UserEntity entity)
+        public Response<User> Create(User user)
         {
-            return _repository.Create(entity);
+            var entity = Mapper.Map<User, UserEntity>(user);
+            var result = _repository.Create(entity);
+            return new Response<User>
+            {
+                ResponseObject = Mapper.Map<UserEntity, User>(result)
+            };
         }
 
-        public UserEntity Get(long id)
+        public Response<User> Get(long id)
         {
-            return _repository.Get(id);
+            return new Response<User>
+            {
+                ResponseObject = Mapper.Map<UserEntity, User>(_repository.Get(id))
+            };
         }
 
-        public UserEntity Update(UserEntity newEntity)
+        public Response<User> Update(User user)
         {
-            return _repository.Update(newEntity);
+            var entity = Mapper.Map<User, UserEntity>(user);
+            var result = _repository.Update(entity);
+            return new Response<User>
+            {
+                ResponseObject = Mapper.Map<UserEntity, User>(result)
+            };
         }
 
         public void Delete(long id)
