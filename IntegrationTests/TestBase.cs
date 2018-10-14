@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Database.Context;
 using Domain.Models.Interfaces;
 using Logic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -15,7 +17,8 @@ namespace IntegrationTests
         private TestServer _server;
         protected HttpClient Client;
         private readonly Uri _hostUri = new Uri(@"http://localhost:1337/");
-
+        protected MainContext DatabaseContext;
+        
         #region SetUpAndTearDown
         
         [OneTimeSetUp]
@@ -26,6 +29,7 @@ namespace IntegrationTests
                 BaseAddress = _hostUri
             };
             Client = _server.CreateClient();
+            DatabaseContext = _server.Host.Services.GetService<MainContext>();
         }
 
         [OneTimeTearDown]

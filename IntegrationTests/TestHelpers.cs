@@ -44,14 +44,21 @@ namespace IntegrationTests
         #region DataGeneration
 
         public static User CreateUserWithRandomData(
-            string username = null, string password = null, string email = null)
+            string username = null, string password = null, string email = null, bool useNulls = false)
         {
-            var user = new User
-            {
-                Username = username ?? Faker.NameFaker.FirstName(),
-                Password = password ?? Faker.StringFaker.AlphaNumeric(20),
-                Email = email ?? Faker.InternetFaker.Email()
-            };
+            var user = useNulls
+                ? new User
+                {
+                    Username = username,
+                    Password = password,
+                    Email = email
+                }
+                : new User
+                {
+                    Username = username ?? Faker.NameFaker.FirstName(),
+                    Password = password ?? Faker.StringFaker.AlphaNumeric(20),
+                    Email = email ?? Faker.InternetFaker.Email()
+                };
 
             return user;
         }
