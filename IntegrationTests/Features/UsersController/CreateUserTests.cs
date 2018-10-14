@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Constants;
 using Domain.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -14,19 +16,37 @@ namespace IntegrationTests.Features.UsersController
         [Test]
         public async Task CreateUserReturns200WithUserModel()
         {
-            // Arrange
+            // ARRANGE
             var requestUser = TestHelpers.CreateUserWithRandomData();
             var request = TestHelpers.CreatePostRequest("api/users", requestUser);
             
             // ACT
-            var (response, responseObject) = await SendRequest<User>(request);
+            var (response, responseBody) = await SendRequest<User>(request);
 
             // ASSERT
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual(requestUser.Username, responseObject.Username);
-            Assert.AreEqual(requestUser.Password, responseObject.Password);
-            Assert.AreEqual(requestUser.Email, responseObject.Email);
-            Assert.Greater(responseObject.UserId, 0);
+            Assert.AreEqual(requestUser.Username, responseBody.ResponseObject.Username);
+            Assert.AreEqual(requestUser.Password, responseBody.ResponseObject.Password);
+            Assert.AreEqual(requestUser.Email, responseBody.ResponseObject.Email);
+            Assert.Greater(responseBody.ResponseObject.UserId, 0);
+        }
+
+        [Test]
+        public async Task CreateUserInvalidEmailReturnsBadRequestWithError()
+        {
+            // ARRANGE
+            var requestUser = TestHelpers.CreateUserWithRandomData(
+                email: "InvalidEmailAddress");
+            var request = TestHelpers.CreatePostRequest("api/users", requestUser);
+
+            // ACT
+            var (response, responseBody) = await SendRequest<User>(request);
+            var (errorKeys, errorValues) = TestHelpers.GetAllKeysAndValues(responseBody.Errors);
+            
+            // ASSERT
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains("Email", errorKeys);
+            Assert.Contains(UserConstants.InvalidEmail, errorValues);
         }
     }
 }
