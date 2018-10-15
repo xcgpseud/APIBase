@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Constants;
 using Domain.Models;
+using Logic.Helpers;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -26,7 +27,6 @@ namespace IntegrationTests.Features.UsersController
             // ASSERT
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(requestUser.Username, responseBody.ResponseObject.Username);
-            Assert.AreEqual(requestUser.Password, responseBody.ResponseObject.Password);
             Assert.AreEqual(requestUser.Email, responseBody.ResponseObject.Email);
             Assert.Greater(responseBody.ResponseObject.UserId, 0);
         }
@@ -47,7 +47,8 @@ namespace IntegrationTests.Features.UsersController
             // ASSERT
             Assert.NotNull(dbUser);
             Assert.AreEqual(requestUser.Username, dbUser.Username);
-            Assert.AreEqual(requestUser.Password, dbUser.Password);
+            Assert.IsTrue(BCrypt.Net.BCrypt.Verify(requestUser.Password, dbUser.Password));
+            Assert.AreNotEqual(requestUser.Password, dbUser.Password);
             Assert.AreEqual(requestUser.Email, dbUser.Email);
             Assert.Greater(dbUser.UserId, 0);
         }
