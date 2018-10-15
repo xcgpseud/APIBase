@@ -1,4 +1,5 @@
-﻿using Database.Entities;
+﻿using System.Security.Cryptography;
+using Database.Entities;
 using Database.Repositories.Interfaces;
 using Domain.Models;
 using Logic.Helpers;
@@ -18,7 +19,8 @@ namespace Logic.Logics
         
         public Response<User> Create(User user)
         {
-            var entity = Mapper.Map<User, UserEntity>(user);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            var entity = Mapper.Map<User, UserEntity>(user, new {Password = hashedPassword});
             var result = _repository.Create(entity);
             return new Response<User>
             {
